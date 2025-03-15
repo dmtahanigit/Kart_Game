@@ -86,6 +86,12 @@ window.GameUI = class GameUI {
             });
         });
         
+        // Select the first character by default
+        const firstCharacter = document.querySelector('.character-option:not(.locked)');
+        if (firstCharacter) {
+            firstCharacter.classList.add('selected');
+        }
+        
         // How to play back button
         document.getElementById('back-from-instructions').addEventListener('click', () => {
             this.game.showScreen('main-menu');

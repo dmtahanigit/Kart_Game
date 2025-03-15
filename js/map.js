@@ -66,7 +66,7 @@ window.GameMap = class GameMap {
         
         this.locations.forEach(location => {
             const marker = document.createElement('div');
-            marker.className = `location-marker ${location.unlocked ? 'unlocked' : 'locked'}`;
+            marker.className = `location-marker ${location.unlocked ? '' : 'locked'}`;
             marker.dataset.locationId = location.id;
             marker.style.left = `${location.x}%`;
             marker.style.top = `${location.y}%`;
@@ -85,6 +85,12 @@ window.GameMap = class GameMap {
             
             this.locationMarkers.appendChild(marker);
         });
+        
+        // Select the first unlocked location by default
+        const firstUnlocked = this.locations.find(location => location.unlocked);
+        if (firstUnlocked) {
+            this.selectLocation(firstUnlocked);
+        }
     }
     
     selectLocation(location) {
