@@ -61,11 +61,11 @@ window.Game = class Game {
     showScreen(screenId) {
         // Hide all screens
         document.querySelectorAll('.screen, .overlay-screen').forEach(screen => {
-            screen.style.display = 'none';
+            screen.classList.remove('active');
         });
         
         // Show the requested screen
-        document.getElementById(screenId).style.display = 'flex';
+        document.getElementById(screenId).classList.add('active');
         this.currentScreen = screenId;
         
         // Special handling for game screen
@@ -245,15 +245,15 @@ window.Game = class Game {
         this.isPaused = !this.isPaused;
         
         if (this.isPaused) {
-            document.getElementById('pause-menu').style.display = 'flex';
+            document.getElementById('pause-menu').classList.add('active');
         } else {
-            document.getElementById('pause-menu').style.display = 'none';
+            document.getElementById('pause-menu').classList.remove('active');
         }
     }
     
     resumeGame() {
         this.isPaused = false;
-        document.getElementById('pause-menu').style.display = 'none';
+        document.getElementById('pause-menu').classList.remove('active');
     }
     
     restartLevel() {

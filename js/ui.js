@@ -207,15 +207,20 @@ window.GameUI = class GameUI {
         const starsEarned = Math.min(Math.floor(stats.score / 1000) + 1, 3);
         
         for (let i = 0; i < stars.length; i++) {
-            stars[i].style.color = i < starsEarned ? '#ffd700' : '#ccc';
+            if (i < starsEarned) {
+                stars[i].classList.add('earned');
+            } else {
+                stars[i].classList.remove('earned');
+            }
         }
         
         // Show/hide unlock notification
+        const unlockNotification = document.getElementById('unlock-notification');
         if (stats.unlocked) {
-            document.getElementById('unlock-notification').style.display = 'block';
+            unlockNotification.classList.add('show');
             document.getElementById('unlocked-item-name').textContent = stats.unlocked;
         } else {
-            document.getElementById('unlock-notification').style.display = 'none';
+            unlockNotification.classList.remove('show');
         }
         
         this.game.showScreen('level-complete');
