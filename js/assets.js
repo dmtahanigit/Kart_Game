@@ -43,8 +43,13 @@ window.AssetManager = class AssetManager {
             // For development, use placeholder assets instead of trying to load real ones
             Assets.createPlaceholderAssets();
             
-            // In a real scenario, we would load actual assets
-            // Assets.loadGameAssets();
+            // Manually trigger the updateProgress to complete loading
+            // This is needed because createPlaceholderAssets doesn't call updateProgress
+            setTimeout(() => {
+                Assets.totalAssets = 1;
+                Assets.loadedAssets = 0;
+                Assets.updateProgress();
+            }, 1000);
         });
     }
     
