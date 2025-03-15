@@ -1,7 +1,75 @@
 /**
- * Toronto Adventure - Asset Management System
+ * Mario Bros Style Game - Asset Management System
  */
 
+// AssetManager class that wraps the Assets object
+class AssetManager {
+    constructor() {
+        // Initialize properties
+        this.images = {};
+        this.audio = {};
+        this.data = {};
+        this.totalAssets = 0;
+        this.loadedAssets = 0;
+    }
+    
+    async loadAssets() {
+        return new Promise((resolve, reject) => {
+            // Set up callbacks
+            Assets.init(
+                (percent) => {
+                    // Update loading progress
+                    const progressBar = document.querySelector('.loading-progress');
+                    if (progressBar) {
+                        progressBar.style.width = `${percent}%`;
+                    }
+                },
+                () => {
+                    // On complete
+                    console.log('All assets loaded successfully');
+                    this.images = Assets.images;
+                    this.audio = Assets.audio;
+                    this.data = Assets.data;
+                    resolve();
+                },
+                (error, path) => {
+                    // On error
+                    console.error(`Failed to load asset: ${path}`, error);
+                    // Continue loading other assets instead of rejecting
+                    // reject(error);
+                }
+            );
+            
+            // For development, use placeholder assets instead of trying to load real ones
+            Assets.createPlaceholderAssets();
+            
+            // In a real scenario, we would load actual assets
+            // Assets.loadGameAssets();
+        });
+    }
+    
+    getImage(key) {
+        return Assets.getImage(key);
+    }
+    
+    getAudio(key) {
+        return Assets.getAudio(key);
+    }
+    
+    getData(key) {
+        return Assets.getData(key);
+    }
+    
+    playSound(key, volume = 1, loop = false) {
+        return Assets.playAudio(key, volume, loop);
+    }
+    
+    stopSound(audioElement) {
+        Assets.stopAudio(audioElement);
+    }
+}
+
+// Original Assets object
 const Assets = {
     // Asset storage
     images: {},

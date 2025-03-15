@@ -1,8 +1,97 @@
 /**
- * Toronto Adventure - Input Handler
+ * Mario Bros Style Game - Input Handler
  * Manages keyboard, touch, and mouse input for both desktop and mobile
  */
 
+// InputHandler class that wraps the Input object
+class InputHandler {
+    constructor() {
+        // Initialize key states
+        this.keys = {
+            left: false,
+            right: false,
+            up: false,
+            down: false,
+            space: false
+        };
+        
+        // Initialize Input object
+        Input.init();
+        
+        // Set up keyboard event listeners
+        document.addEventListener('keydown', this.handleKeyDown.bind(this));
+        document.addEventListener('keyup', this.handleKeyUp.bind(this));
+    }
+    
+    handleKeyDown(e) {
+        switch(e.key) {
+            case 'ArrowLeft':
+                this.keys.left = true;
+                break;
+            case 'ArrowRight':
+                this.keys.right = true;
+                break;
+            case 'ArrowUp':
+                this.keys.up = true;
+                break;
+            case 'ArrowDown':
+                this.keys.down = true;
+                break;
+            case ' ':
+                this.keys.space = true;
+                break;
+        }
+    }
+    
+    handleKeyUp(e) {
+        switch(e.key) {
+            case 'ArrowLeft':
+                this.keys.left = false;
+                break;
+            case 'ArrowRight':
+                this.keys.right = false;
+                break;
+            case 'ArrowUp':
+                this.keys.up = false;
+                break;
+            case 'ArrowDown':
+                this.keys.down = false;
+                break;
+            case ' ':
+                this.keys.space = false;
+                break;
+        }
+    }
+    
+    isLeftActive() {
+        return this.keys.left || Input.isLeftActive();
+    }
+    
+    isRightActive() {
+        return this.keys.right || Input.isRightActive();
+    }
+    
+    isJumpActive() {
+        return this.keys.up || Input.isJumpActive();
+    }
+    
+    isSpecialActive() {
+        return this.keys.space || Input.isSpecialActive();
+    }
+    
+    reset() {
+        this.keys = {
+            left: false,
+            right: false,
+            up: false,
+            down: false,
+            space: false
+        };
+        Input.reset();
+    }
+}
+
+// Original Input object
 const Input = {
     // Key states
     keys: {},

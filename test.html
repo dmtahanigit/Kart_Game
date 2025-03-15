@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .debug-panel {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            padding: 10px;
+            overflow: auto;
+            max-height: 300px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #0069d9;
+        }
+        #console-output {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Test Page</h1>
+    
+    <div class="debug-panel">
+        <h2>Script Loading Status</h2>
+        <div id="script-status"></div>
+    </div>
+    
+    <div class="debug-panel">
+        <h2>Class Definitions</h2>
+        <div id="class-status"></div>
+    </div>
+    
+    <div class="debug-panel">
+        <h2>DOM Elements</h2>
+        <div id="element-status"></div>
+    </div>
+    
+    <div class="debug-panel">
+        <h2>Console Output</h2>
+        <pre id="console-output"></pre>
+    </div>
+    
+    <div class="debug-panel">
+        <h2>Actions</h2>
+        <button id="test-game">Test Game Initialization</button>
+        <button id="clear-console">Clear Console</button>
+        <button id="go-to-game">Go to Main Game</button>
+    </div>
+    
+    <script>
+        // Override console methods to capture output
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn,
+            info: console.info
+        };
+        
+        const consoleOutput = document.getElementById('console-output');
+        
+        function appendToConsole(message, type) {
+            const timestamp = new Date().toLocaleTimeString();
+            consoleOutput.innerHTML += `[${timestamp}] [${type}] ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        console.log = function(message) {
+            originalConsole.log(message);
+            appendToConsole(message, 'LOG');
+        };
+        
+        console.error = function(message) {
+            originalConsole.error(message);
+            appendToConsole(message, 'ERROR');
+        };
+        
+        console.warn = function(message) {
+            originalConsole.warn(message);
+            appendToConsole(message, 'WARN');
+        };
+        
+        console.info = function(message) {
+            originalConsole.info(message);
+            appendToConsole(message, 'INFO');
+        };
+        
+        // Check script loading
+        function checkScripts() {
+            const scripts = [
+                'utils.js',
+                'assets.js',
+                'input.js',
+                'characters.js',
+                'levels.js',
+                'map.js',
+                'physics.js',
+                'ui.js',
+                'game.js',
+                'main.js'
+            ];
+            
+            const scriptStatus = document.getElementById('script-status');
+            scriptStatus.innerHTML = '';
+            
+            scripts.forEach(script => {
+                const scriptElement = document.createElement('div');
+                
+                // Try to load the script
+                const testScript = document.createElement('script');
+                testScript.src = `js/${script}`;
+                testScript.onload = () => {
+                    scriptElement.innerHTML = `<span class="status success">${script}</span> - Loaded successfully`;
+                    console.log(`Script ${script} loaded successfully`);
+                };
+                testScript.onerror = () => {
+                    scriptElement.innerHTML = `<span class="status error">${script}</span> - Failed to load`;
+                    console.error(`Failed to load script ${script}`);
+                };
+                document.head.appendChild(testScript);
+                
+                scriptStatus.appendChild(scriptElement);
+            });
+        }
+        
+        // Check class definitions
+        function checkClasses() {
+            const classes = [
+                'Game',
+                'Character',
+                'Level',
+                'GameUI',
+                'GameMap',
+                'AssetManager',
+                'InputHandler'
+            ];
+            
+            const classStatus = document.getElementById('class-status');
+            classStatus.innerHTML = '';
+            
+            setTimeout(() => {
+                classes.forEach(className => {
+                    const classElement = document.createElement('div');
+                    
+                    if (typeof window[className] !== 'undefined') {
+                        classElement.innerHTML = `<span class="status success">${className}</span> - Defined`;
+                        console.log(`Class ${className} is defined`);
+                    } else {
+                        classElement.innerHTML = `<span class="status error">${className}</span> - Not defined`;
+                        console.error(`Class ${className} is not defined`);
+                    }
+                    
+                    classStatus.appendChild(classElement);
+                });
+            }, 1000); // Give scripts time to load
+        }
+        
+        // Check DOM elements
+        function checkElements() {
+            const elements = [
+                'game-container',
+                'loading-screen',
+                'main-menu',
+                'game-canvas',
+                'game-screen'
+            ];
+            
+            const elementStatus = document.getElementById('element-status');
+            elementStatus.innerHTML = '';
+            
+            elements.forEach(id => {
+                const elementDiv = document.createElement('div');
+                
+                // Create an iframe to check if element exists in the main game
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = 'index.html';
+                
+                iframe.onload = () => {
+                    const element = iframe.contentDocument.getElementById(id);
+                    
+                    if (element) {
+                        elementDiv.innerHTML = `<span class="status success">${id}</span> - Found in index.html`;
+                        console.log(`Element #${id} found in index.html`);
+                    } else {
+                        elementDiv.innerHTML = `<span class="status error">${id}</span> - Not found in index.html`;
+                        console.error(`Element #${id} not found in index.html`);
+                    }
+                    
+                    document.body.removeChild(iframe);
+                };
+                
+                document.body.appendChild(iframe);
+                elementStatus.appendChild(elementDiv);
+            });
+        }
+        
+        // Test game initialization
+        function testGameInit() {
+            console.log('Testing game initialization...');
+            
+            try {
+                console.log('Creating Game instance');
+                const game = new Game();
+                console.log('Game instance created successfully');
+                
+                console.log('Initializing game');
+                game.init().then(() => {
+                    console.log('Game initialized successfully');
+                }).catch(error => {
+                    console.error('Error initializing game:', error);
+                });
+            } catch (error) {
+                console.error('Failed to create or initialize game:', error);
+            }
+        }
+        
+        // Initialize tests
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Test page loaded');
+            checkScripts();
+            checkClasses();
+            checkElements();
+            
+            // Button event listeners
+            document.getElementById('test-game').addEventListener('click', testGameInit);
+            document.getElementById('clear-console').addEventListener('click', () => {
+                consoleOutput.innerHTML = '';
+            });
+            document.getElementById('go-to-game').addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>
