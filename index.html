@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toronto Adventure</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen">
+            <h1>Toronto Adventure</h1>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p>Loading game assets...</p>
+        </div>
+
+        <!-- Main Menu Screen -->
+        <div id="main-menu" class="screen">
+            <h1 class="game-title">Toronto Adventure</h1>
+            <div class="menu-buttons">
+                <button id="play-button" class="menu-button">Play</button>
+                <button id="how-to-play-button" class="menu-button">How to Play</button>
+                <button id="credits-button" class="menu-button">Credits</button>
+            </div>
+        </div>
+
+        <!-- Character Selection Screen -->
+        <div id="character-select" class="screen">
+            <h2>Select Your Character</h2>
+            <div class="character-carousel">
+                <div class="character-option" data-character="maple">
+                    <div class="character-preview maple-preview"></div>
+                    <h3>Maple Leaf Mascot</h3>
+                    <p>Fast runner with speed boost ability</p>
+                    <div class="character-stats">
+                        <div class="stat">
+                            <span>Speed</span>
+                            <div class="stat-bar"><div class="stat-fill" style="width: 80%"></div></div>
+                        </div>
+                        <div class="stat">
+                            <span>Jump</span>
+                            <div class="stat-bar"><div class="stat-fill" style="width: 60%"></div></div>
+                        </div>
+                        <div class="stat">
+                            <span>Special</span>
+                            <div class="stat-bar"><div class="stat-fill" style="width: 70%"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="character-option locked" data-character="cn-tower">
+                    <div class="character-preview cn-tower-preview"></div>
+                    <h3>CN Tower Explorer</h3>
+                    <p>High jumper with extended air time</p>
+                    <div class="lock-icon">🔒</div>
+                    <p class="unlock-info">Complete Downtown level to unlock</p>
+                </div>
+                <div class="character-option locked" data-character="casa-loma">
+                    <div class="character-preview casa-loma-preview"></div>
+                    <h3>Casa Loma Knight</h3>
+                    <p>Durable character with shield ability</p>
+                    <div class="lock-icon">🔒</div>
+                    <p class="unlock-info">Complete Midtown level to unlock</p>
+                </div>
+                <div class="character-option locked" data-character="raccoon">
+                    <div class="character-preview raccoon-preview"></div>
+                    <h3>Raccoon Rascal</h3>
+                    <p>Can collect items from a distance</p>
+                    <div class="lock-icon">🔒</div>
+                    <p class="unlock-info">Collect 100 coins to unlock</p>
+                </div>
+            </div>
+            <div class="navigation-buttons">
+                <button id="back-to-menu" class="nav-button">Back</button>
+                <button id="select-character" class="nav-button">Select</button>
+            </div>
+        </div>
+
+        <!-- Toronto Map Screen -->
+        <div id="toronto-map" class="screen">
+            <h2>Toronto Map</h2>
+            <div class="map-container">
+                <div class="toronto-map-svg">
+                    <!-- Map will be loaded here -->
+                </div>
+                <div class="map-location-markers">
+                    <!-- Location markers will be added here -->
+                </div>
+            </div>
+            <div class="location-info-panel">
+                <h3 id="location-name">Select a Location</h3>
+                <div id="location-image"></div>
+                <p id="location-description"></p>
+                <div id="location-stats">
+                    <div class="stars-container">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+                <button id="play-level" class="play-button" disabled>Play Level</button>
+            </div>
+            <div class="map-controls">
+                <button id="zoom-in">+</button>
+                <button id="zoom-out">-</button>
+                <button id="reset-view">Reset</button>
+                <button id="back-to-character">Back</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <canvas id="game-canvas"></canvas>
+            <div class="game-ui">
+                <div class="score-container">
+                    <span class="score-label">Score:</span>
+                    <span id="score-value">0</span>
+                </div>
+                <div class="lives-container">
+                    <span class="lives-label">Lives:</span>
+                    <div id="lives-icons"></div>
+                </div>
+                <div class="special-container">
+                    <span class="special-label">Special:</span>
+                    <div id="special-meter"></div>
+                </div>
+            </div>
+            <div class="mobile-controls">
+                <div class="d-pad">
+                    <button id="left-button">←</button>
+                    <button id="right-button">→</button>
+                </div>
+                <button id="jump-button">Jump</button>
+                <button id="special-button">Special</button>
+            </div>
+            <button id="pause-button">❚❚</button>
+        </div>
+
+        <!-- Pause Menu -->
+        <div id="pause-menu" class="overlay-screen">
+            <div class="pause-panel">
+                <h2>Game Paused</h2>
+                <button id="resume-button" class="menu-button">Resume</button>
+                <button id="restart-button" class="menu-button">Restart Level</button>
+                <button id="exit-to-map" class="menu-button">Exit to Map</button>
+            </div>
+        </div>
+
+        <!-- Level Complete Screen -->
+        <div id="level-complete" class="overlay-screen">
+            <div class="level-complete-panel">
+                <h2>Level Complete!</h2>
+                <div class="level-stats">
+                    <div class="stat-row">
+                        <span>Score:</span>
+                        <span id="final-score">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Coins:</span>
+                        <span id="coins-collected">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Time:</span>
+                        <span id="completion-time">0:00</span>
+                    </div>
+                </div>
+                <div class="level-stars">
+                    <span class="big-star">★</span>
+                    <span class="big-star">★</span>
+                    <span class="big-star">★</span>
+                </div>
+                <div class="unlocked-item" id="unlock-notification">
+                    <p>New character unlocked: <span id="unlocked-item-name">CN Tower Explorer</span></p>
+                </div>
+                <div class="level-complete-buttons">
+                    <button id="next-level" class="menu-button">Next Level</button>
+                    <button id="replay-level" class="menu-button">Replay</button>
+                    <button id="back-to-map" class="menu-button">Back to Map</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over" class="overlay-screen">
+            <div class="game-over-panel">
+                <h2>Game Over</h2>
+                <p>Better luck next time!</p>
+                <div class="game-over-stats">
+                    <div class="stat-row">
+                        <span>Score:</span>
+                        <span id="game-over-score">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Coins:</span>
+                        <span id="game-over-coins">0</span>
+                    </div>
+                </div>
+                <div class="game-over-buttons">
+                    <button id="try-again" class="menu-button">Try Again</button>
+                    <button id="game-over-to-map" class="menu-button">Back to Map</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Play Screen -->
+        <div id="how-to-play" class="screen">
+            <h2>How to Play</h2>
+            <div class="instructions">
+                <div class="instruction-section">
+                    <h3>Desktop Controls</h3>
+                    <ul>
+                        <li><strong>←/→ Arrow Keys:</strong> Move left/right</li>
+                        <li><strong>↑ Arrow Key:</strong> Jump</li>
+                        <li><strong>Space Bar:</strong> Special ability</li>
+                        <li><strong>P:</strong> Pause game</li>
+                    </ul>
+                </div>
+                <div class="instruction-section">
+                    <h3>Mobile Controls</h3>
+                    <ul>
+                        <li><strong>Left/Right Buttons:</strong> Move left/right</li>
+                        <li><strong>Jump Button:</strong> Jump</li>
+                        <li><strong>Special Button:</strong> Special ability</li>
+                    </ul>
+                </div>
+                <div class="instruction-section">
+                    <h3>Objective</h3>
+                    <p>Collect coins, avoid obstacles, and reach the end of each level to unlock new characters and locations around Toronto!</p>
+                </div>
+            </div>
+            <button id="back-from-instructions" class="nav-button">Back to Menu</button>
+        </div>
+
+        <!-- Credits Screen -->
+        <div id="credits" class="screen">
+            <h2>Credits</h2>
+            <div class="credits-content">
+                <div class="credit-section">
+                    <h3>Game Design & Development</h3>
+                    <p>Toronto Adventure Team</p>
+                </div>
+                <div class="credit-section">
+                    <h3>Toronto Landmarks</h3>
+                    <ul>
+                        <li>CN Tower</li>
+                        <li>Casa Loma</li>
+                        <li>Chinatown</li>
+                        <li>Little India</li>
+                        <li>High Park</li>
+                        <li>Centre Island</li>
+                        <li>Canada's Wonderland</li>
+                    </ul>
+                </div>
+                <div class="credit-section">
+                    <h3>Special Thanks</h3>
+                    <p>To the amazing city of Toronto for the inspiration!</p>
+                </div>
+            </div>
+            <button id="back-from-credits" class="nav-button">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/assets.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/characters.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
