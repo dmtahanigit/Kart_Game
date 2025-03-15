@@ -4,7 +4,7 @@
  */
 
 // InputHandler class that wraps the Input object
-class InputHandler {
+window.InputHandler = class InputHandler {
     constructor() {
         // Initialize key states
         this.keys = {

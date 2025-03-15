@@ -1,6 +1,6 @@
 // map.js - Handles the game map and level selection
 
-class GameMap {
+window.GameMap = class GameMap {
     constructor(game) {
         this.game = game;
         this.mapContainer = document.querySelector('.toronto-map-svg');

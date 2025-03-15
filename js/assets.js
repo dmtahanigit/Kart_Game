@@ -3,7 +3,7 @@
  */
 
 // AssetManager class that wraps the Assets object
-class AssetManager {
+window.AssetManager = class AssetManager {
     constructor() {
         // Initialize properties
         this.images = {};

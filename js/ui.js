@@ -1,6 +1,6 @@
 // ui.js - Handles the game's user interface elements
 
-class GameUI {
+window.GameUI = class GameUI {
     constructor(game) {
         this.game = game;
         this.scoreValue = document.getElementById('score-value');

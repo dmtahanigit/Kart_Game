@@ -7,7 +7,7 @@
  * Base Character class
  * Provides common functionality for all characters
  */
-class Character {
+window.Character = class Character {
     /**
      * Create a new character
      * @param {string} id - Character identifier
